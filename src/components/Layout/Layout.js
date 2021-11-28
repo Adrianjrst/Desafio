@@ -12,9 +12,19 @@ import { useNavigate } from "react-router-dom";
 import Todolist from "../TodoList/Todolist";
 import TodoForm from "../TodoForm/TodoForm";
 import axios from "axios";
+import { sliderClasses } from "@mui/material";
 
 const Layout = () => {
-  const [todos, setTodos] = useState();
+  const [todos, setTodos] = useState([]);
+
+  React.useEffect(() => {
+    axios
+      .get("https://jsonplaceholder.typicode.com/todos")
+      .then(function (response) {
+        console.log(response);
+        setTodos(response.data.slice(0, 10));
+      });
+  }, []);
 
   const checkTodo = (id) => {
     console.log(id);
@@ -34,7 +44,7 @@ const Layout = () => {
   //Añadir a todo
   const addTodo = (text) => {
     const newTodo = {
-      id: todos[todos.length - 1].id + 1,
+      id: todos.length == 0 ? 0 : todos[todos.length - 1].id + 1,
       title: text,
       completed: false,
     };
